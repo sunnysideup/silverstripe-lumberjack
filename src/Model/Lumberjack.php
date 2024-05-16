@@ -10,8 +10,10 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldViewButton;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Lumberjack\Forms\GridFieldConfig_Lumberjack;
+use SilverStripe\Lumberjack\Forms\GridFieldSiteTreeViewButton;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
@@ -67,6 +69,15 @@ class Lumberjack extends SiteTreeExtension
                 $pages,
                 $this->getLumberjackGridFieldConfig()
             );
+
+            // Ensure correct link is used when gridfield is readonly
+            $readonlyComponents = $gridField->getReadonlyComponents();
+            $viewButtonIndex = array_search(GridFieldViewButton::class, $readonlyComponents);
+            if ($viewButtonIndex !== false) {
+                unset($readonlyComponents[$viewButtonIndex]);
+            }
+            $readonlyComponents[] = GridFieldSiteTreeViewButton::class;
+            $gridField->setReadonlyComponents($readonlyComponents);
 
             $tab = Tab::create('ChildPages', $this->getLumberjackTitle(), $gridField);
             $fields->insertAfter('Main', $tab);
