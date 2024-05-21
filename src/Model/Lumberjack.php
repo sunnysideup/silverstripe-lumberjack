@@ -56,7 +56,7 @@ class Lumberjack extends SiteTreeExtension
      *
      * @param FieldList $fields
      */
-    public function updateCMSFields(FieldList $fields)
+    protected function updateCMSFields(FieldList $fields)
     {
         $excluded = $this->owner->getExcludedSiteTreeClassNames();
         if (!empty($excluded)) {
