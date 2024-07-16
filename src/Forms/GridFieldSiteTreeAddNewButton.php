@@ -34,17 +34,17 @@ class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton implements Gri
      * Determine the list of classnames and titles allowed for a given parent object
      *
      * @param SiteTree $parent
-     * @return boolean
+     * @return array
      */
-    public function getAllowedChildren(SiteTree $parent = null)
+    public function getAllowedChildren(SiteTree $parent = null) : array
     {
         if (!$parent || !$parent->canAddChildren()) {
-            return array();
+            return [];
         }
 
         $nonHiddenPageTypes = SiteTree::page_type_classes();
         $allowedChildren = $parent->allowedChildren();
-        $children = array();
+        $children = [];
         foreach ($allowedChildren as $class) {
             if (Config::inst()->get($class, 'show_in_sitetree') === false) {
                 $instance = Injector::inst()->get($class);
@@ -59,7 +59,7 @@ class GridFieldSiteTreeAddNewButton extends GridFieldAddNewButton implements Gri
                 }
             }
         }
-        return $children;
+        return (array) $children;
     }
 
     public function getHTMLFragments($gridField)
